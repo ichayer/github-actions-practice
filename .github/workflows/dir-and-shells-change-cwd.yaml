@@ -1,0 +1,19 @@
+name: Change CWD
+on: [push]
+
+jobs:
+    display-wd-info-ubuntu:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Display Current Working Directory & List Files
+              run: |
+                    pwd
+                    ls -a
+                    echo $GITHUB_SHA
+                    echo $GITHUB_REPOSITORY
+                    echo $GITHUB_WORKSPACE
+            
+            # Changing PWD at job level
+            - name: Change CWD
+              working-directory: /home/runner
+              run: pwd  
