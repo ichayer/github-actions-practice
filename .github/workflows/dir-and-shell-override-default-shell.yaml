@@ -1,0 +1,24 @@
+name: Overriding shells
+on: [push]
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    display-wd-info-windows:
+        runs-on: windows-latest
+        steps:
+            - name: Display Current Working Directory & List Files
+              run: |
+                pwd
+                ls -a                
+                echo $GITHUB_SHA
+                echo $GITHUB_REPOSITORY
+                echo $GITHUB_WORKSPACE
+            
+            - name: Override default shell to a Python shell
+              shell: python
+              run: |
+                import platform
+                print(platform.processor())
