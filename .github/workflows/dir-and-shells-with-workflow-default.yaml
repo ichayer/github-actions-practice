@@ -1,0 +1,42 @@
+name: Display working directories and shell info with defaults at workflow level
+on: [push]
+
+# For every job, use a bash shell (even for windows)
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    display-wd-info-ubuntu:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Display Current Working Directory & List Files
+              run: |
+                    pwd
+                    ls -a
+                    echo $GITHUB_SHA
+                    echo $GITHUB_REPOSITORY
+                    echo $GITHUB_WORKSPACE
+    
+    # !!!!!!!!!
+    display-wd-info-windows:
+        runs-on: windows-latest
+        steps:
+            - name: Display Current Working Directory & List Files
+              run: |
+                pwd
+                ls -a                
+                echo $GITHUB_SHA
+                echo $GITHUB_REPOSITORY
+                echo $GITHUB_WORKSPACE
+    
+    display-wd-info-macos:
+        runs-on: macos-latest
+        steps:
+            - name: Display Current Working Directory & List Files
+              run: |
+                pwd
+                ls -a
+                echo $GITHUB_SHA
+                echo $GITHUB_REPOSITORY
+                echo $GITHUB_WORKSPACE
