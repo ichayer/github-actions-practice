@@ -1,0 +1,43 @@
+name: Status Check Functions
+on: [push]
+
+jobs:
+    job-1:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Step 1
+              run: sleep 20
+            
+            # - name: Make the hole job fail
+            #   run: exit 1
+
+            - name: Step 2
+              id: step-2
+              run: exit 1
+            
+            - name: Runs ONLY IF Step 2 step has failed
+              if: failure() && steps.step-2.conclusion == 'failure' 
+              run: echo 'Step 2 failed'
+
+            - name: Runs on job failure
+              if: failure() 
+              run: echo 'Runs only on job-2 failure'
+
+            - name: Runs on job success
+              if: success()
+              run: echo 'Runs on job-1 success'
+
+            - name: Always runs 
+              if: always()
+              run: echo 'Always Runs'
+            
+            - name: Runs when job cancelled
+              if: cancelled()
+              run: echo 'Runs on job-1 cancelled'
+
+    jobs-2:
+        runs-on: ubuntu-laatest
+        needs: job-1
+        if: failure() 
+        steps:
+            - run: echo 'Job-1 failed, so Job 2 executed'
