@@ -1,0 +1,26 @@
+# Run with differnt node versions
+name: Matrix 
+on: [push]
+
+jobs:
+    node-matrix:
+
+        # If any of our jobs in the matrix fail, it will prevent the workflow for failing
+        continue-on-error: true 
+        
+        strategy: 
+            matrix:
+                os: [ubuntu-latest, windows-latest]
+                node-version: [14, 15, 16]
+            
+            # It will prevent github from cancelling all in-progress jobs if any matrix job fails
+            fail-fast: false 
+        
+        runs-on: ${{ matrix.os }}
+        
+        steps:
+            - run: node -v
+            - uses: actions/setup-node@v3
+              with:
+                node-version: ${{ matrix.node-version }}
+            - run: node -v
