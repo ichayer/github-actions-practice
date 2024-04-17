@@ -1,4 +1,32 @@
-# Run with differnt node versions
+#------- ORIGINAL COMBINATIONS CANT BE OVERWRITTEN --------#
+#------- THEY CAN CONTAIN MORE FIELDS OR MERGED COMBINATIONS -----------#
+#------ NEW COMBINATIONS CAN BE ADDED -------------#
+# {os: ubuntu-latest, node-version: 14}
+# {os: ubuntu-latest, node-version: 15}
+# {os: ubuntu-latest, node-version: 16}
+# {os: windows-latest, node-version: 14}
+# {os: windows-latest, node-version: 15}
+# {os: windows-latest, node-version: 16}
+
+# ------- WITH INCLUDE -------- #
+# {os: ubuntu-latest, node-version: 14, is-ubuntu: true, experimental: true}
+# {os: ubuntu-latest, node-version: 15, is-ubuntu: true, experimental: true}
+# {os: ubuntu-latest, node-version: 16, is-ubuntu: true, experimental: true}
+# {os: windows-latest, node-version: 14, experimental: false }
+# {os: windows-latest, node-version: 15, experimental: false }
+# {os: windows-latest, node-version: 16, experimental: false}
+# {os: macos-latest, node-version: 15}
+# {os: ubuntu-latest, node-version: 17}
+
+# ------- WITH EXCLUDE -------- #
+# {os: ubuntu-latest, node-version: 15, is-ubuntu: true, experimental: true}
+# {os: ubuntu-latest, node-version: 16, is-ubuntu: true, experimental: true}
+# {os: windows-latest, node-version: 14, experimental: false }
+# {os: windows-latest, node-version: 15, experimental: false }
+# {os: windows-latest, node-version: 16, experimental: false}
+# {os: macos-latest, node-version: 15}
+# {os: ubuntu-latest, node-version: 17}
+
 name: Matrix 
 on: [push]
 
@@ -13,6 +41,29 @@ jobs:
                 os: [ubuntu-latest, windows-latest]
                 node-version: [14, 15, 16]
             
+                includes:
+                    - os: ubuntu-latest # target a combination
+                      is-ubuntu: true   # merge
+
+                    - os: macos-latest # cant be merged! New combination added
+                      node-version: 15
+
+                    - experimental: false # cant be merged! Field will be added to the original combination
+
+                    - os: ubuntu-latest # target
+                      node-version: 16 # target
+                      experimental: true # merge
+                    
+                    # Because an original combinations must be modified, a new combination is created
+                    - os: ubuntu-latest # target
+                      node-version: 17 # target
+                
+                exclude: 
+                    # - os: ubuntu-latest # any combination of ubuntu latest will be excluded
+                    
+                    - os: ubuntu-latest # only one combination is not going to run
+                      node-version: 14
+
             # It will prevent github from cancelling all in-progress jobs if any matrix job fails
             fail-fast: false 
         
@@ -20,6 +71,7 @@ jobs:
         
         steps:
             - run: node -v
+            - run: echo '${{ toJson(matrix) }}'
             - uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node-version }}
